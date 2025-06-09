@@ -1,5 +1,5 @@
 //
-//  MultipeerConnectivity.swift
+//  MLKit.swift
 //  challenge4exploration
 //
 //  Created by Ahmad Zuhal Zhafran on 05/06/25.
@@ -7,15 +7,15 @@
 
 import SwiftUI
 
-struct MultipeerConnectivity: View {
+struct MLKit: View {
     var body: some View {
         VStack {
-            Text("MultipeerConnectivity")
+            Text("MLKit")
                 .font(.largeTitle)
                 .fontWeight(.bold)
                 .padding()
             
-            Text("Peer-to-Peer Networking")
+            Text("Natural Language Processing, Face Detection, and Text Recognition")
                 .font(.title2)
                 .foregroundColor(.secondary)
         }
@@ -23,9 +23,5 @@ struct MultipeerConnectivity: View {
 }
 
 #Preview {
-    MultipeerConnectivity()
-<<<<<<< HEAD
-}
-=======
+    MLKit()
 } 
->>>>>>> a9bd00e22d095a1fda8f0794ac82ca62c607bff7
