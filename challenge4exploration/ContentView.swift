@@ -22,7 +22,7 @@ struct ContentView: View {
             GamePlayKit()
         }
         Tab("SpriteKit", systemImage: "figure.run"){
-            SpriteKit()
+            SpriteKitView()
         }
         Tab("MultipeerConnectivity", systemImage: "network"){
             MultipeerConnectivity()
@@ -39,4 +39,5 @@ struct ContentView: View {
 
 #Preview {
   ContentView()
+        .preferredColorScheme(.light)
 }
