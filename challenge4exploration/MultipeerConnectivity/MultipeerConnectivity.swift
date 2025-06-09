@@ -24,4 +24,4 @@ struct MultipeerConnectivity: View {
 
 #Preview {
     MultipeerConnectivity()
-} 
+}
