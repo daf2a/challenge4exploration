@@ -1,5 +1,5 @@
 //
-//  CoreMotion.swift
+//  SpriteKit.swift
 //  challenge4exploration
 //
 //  Created by Ahmad Zuhal Zhafran on 05/06/25.
@@ -7,15 +7,15 @@
 
 import SwiftUI
 
-struct CoreMotion: View {
+struct SpriteKit: View {
     var body: some View {
         VStack {
-            Text("CoreMotion")
+            Text("SpriteKit")
                 .font(.largeTitle)
                 .fontWeight(.bold)
                 .padding()
             
-            Text("Accelerometer, Gyroscope, and Pedometer")
+            Text("2D Game Development")
                 .font(.title2)
                 .foregroundColor(.secondary)
         }
@@ -23,5 +23,5 @@ struct CoreMotion: View {
 }
 
 #Preview {
-    CoreMotion()
-}
+    SpriteKit()
+} 

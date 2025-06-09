@@ -1,5 +1,5 @@
 //
-//  CoreMotion.swift
+//  MultipeerConnectivity.swift
 //  challenge4exploration
 //
 //  Created by Ahmad Zuhal Zhafran on 05/06/25.
@@ -7,15 +7,15 @@
 
 import SwiftUI
 
-struct CoreMotion: View {
+struct MultipeerConnectivity: View {
     var body: some View {
         VStack {
-            Text("CoreMotion")
+            Text("MultipeerConnectivity")
                 .font(.largeTitle)
                 .fontWeight(.bold)
                 .padding()
             
-            Text("Accelerometer, Gyroscope, and Pedometer")
+            Text("Peer-to-Peer Networking")
                 .font(.title2)
                 .foregroundColor(.secondary)
         }
@@ -23,5 +23,5 @@ struct CoreMotion: View {
 }
 
 #Preview {
-    CoreMotion()
-}
+    MultipeerConnectivity()
+} 
