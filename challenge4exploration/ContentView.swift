@@ -30,6 +30,9 @@ struct ContentView: View {
         Tab("VisionKit", systemImage: "viewfinder"){
             VisionKit()
         }
+        Tab("MLKit", systemImage: "brain.head.profile"){
+            MLKit()
+        }
     }
   }
 }
