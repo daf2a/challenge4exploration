@@ -12,6 +12,7 @@ struct challenge4explorationApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .preferredColorScheme(.light)
         }
     }
 }
