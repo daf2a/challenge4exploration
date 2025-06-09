@@ -24,15 +24,15 @@ struct PencilKit: View {
           }
           .padding()
       }
-//      .onAppear {
-//          if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-//             let window = windowScene.windows.first {
-//              let toolPicker = PKToolPicker()
-//              toolPicker.setVisible(true, forFirstResponder: canvasView)
-//              toolPicker.addObserver(canvasView)
-//              canvasView.becomeFirstResponder()
-//          }
-//      }
+      .onAppear {
+          if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+             let window = windowScene.windows.first {
+              let toolPicker = PKToolPicker()
+              toolPicker.setVisible(true, forFirstResponder: canvasView)
+              toolPicker.addObserver(canvasView)
+              canvasView.becomeFirstResponder()
+          }
+      }
   }
 }
 
