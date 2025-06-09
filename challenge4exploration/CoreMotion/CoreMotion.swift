@@ -16,7 +16,6 @@ struct CoreMotion: View {
     let motion = CMMotionManager()  // 3️⃣ Objek utama untuk sensor motion
 
     var body: some View {
-<<<<<<< HEAD
         VStack(spacing: 20) {
             Text("Accelerometer Data")
                 .font(.title)
@@ -39,17 +38,6 @@ struct CoreMotion: View {
                 y = data.acceleration.y  // 8️⃣ Update nilai Y
                 z = data.acceleration.z  // 8️⃣ Update nilai Z
             }
-=======
-        VStack {
-            Text("CoreMotion")
-                .font(.largeTitle)
-                .fontWeight(.bold)
-                .padding()
-            
-            Text("Accelerometer, Gyroscope, and Pedometer")
-                .font(.title2)
-                .foregroundColor(.secondary)
->>>>>>> a9bd00e22d095a1fda8f0794ac82ca62c607bff7
         }
     }
 }
