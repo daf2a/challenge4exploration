@@ -5,16 +5,16 @@ import SpriteKit
 struct SpriteKitView: View {
     var scene: GameScene {
         let scene = GameScene()
-        // Using screen bounds for the scene size
-        scene.size = UIScreen.main.bounds.size
+        // The scene's size is now set dynamically in GameScene.didMove(to:)
+        // to match the SpriteView's frame, which is determined by SwiftUI's layout.
         scene.scaleMode = .fill
         return scene
     }
 
     var body: some View {
         SpriteView(scene: scene)
-            .ignoresSafeArea()
-            .navigationBarHidden(true)
+            .clipShape(RoundedRectangle(cornerRadius: 25, style: .continuous))
+            .padding()
     }
 }
 
@@ -142,7 +142,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         scoreNode.physicsBody?.contactTestBitMask = birdCategory
         pipePair.addChild(scoreNode)
 
-        let moveAction = SKAction.moveBy(x: -self.size.width - pipeWidth * 2, y: 0, duration: 4.0)
+        let moveAction = SKAction.moveBy(x: -self.size.width - pipeWidth * 2, y: 0, duration: 5.0)
         let removeAction = SKAction.removeFromParent()
         pipePair.run(SKAction.sequence([moveAction, removeAction]))
 
@@ -154,7 +154,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             restartGame()
         } else {
             bird.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-            bird.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 30))
+            bird.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 20))
         }
     }
     
@@ -215,11 +215,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
 }
 
-
 // SwiftUI Preview Provider
 struct SpriteKitView_Previews: PreviewProvider {
     static var previews: some View {
-        SpriteKitView()
-            .preferredColorScheme(.light)
+        NavigationView {
+            SpriteKitView()
+                .navigationTitle("Flappy Bird")
+                .navigationBarTitleDisplayMode(.inline)
+        }
+        .preferredColorScheme(.light)
     }
 }
