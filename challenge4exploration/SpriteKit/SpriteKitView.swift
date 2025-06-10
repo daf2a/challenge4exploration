@@ -5,8 +5,6 @@ import SpriteKit
 struct SpriteKitView: View {
     var scene: GameScene {
         let scene = GameScene()
-        // The scene's size is now set dynamically in GameScene.didMove(to:)
-        // to match the SpriteView's frame, which is determined by SwiftUI's layout.
         scene.scaleMode = .fill
         return scene
     }
