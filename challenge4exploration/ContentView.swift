@@ -31,7 +31,7 @@ struct ContentView: View {
             VisionKit()
         }
         Tab("MLKit", systemImage: "brain.head.profile"){
-            MLKit()
+            MLKitNew()
         }
     }
   }

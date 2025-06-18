@@ -9,6 +9,7 @@ import SwiftUI
 import PencilKit
 import CoreML
 import Vision
+import UIKit
 
 struct MLKit: View {
     @State private var canvasView = PKCanvasView()
@@ -23,6 +24,7 @@ struct MLKit: View {
         "key", "ice cream", "shorts", "hand", "fish", 
         "van", "hamburger", "alarm clock", "candle", "grapes"
     ]
+    
     
     var body: some View {
         VStack(spacing: 20) {
@@ -61,7 +63,7 @@ struct MLKit: View {
                     .padding(.bottom, 5)
                 
                 CanvasView(canvasView: $canvasView)
-                    .frame(height: 300)
+                    .frame(width: 299, height: 299)
                     .background(Color.white)
                     .cornerRadius(15)
                     .overlay(
@@ -171,6 +173,7 @@ struct MLKit: View {
         canvasView.drawingPolicy = .anyInput
         canvasView.tool = PKInkingTool(.pen, color: .black, width: 4)
         canvasView.backgroundColor = UIColor.white
+        canvasView.frame = CGRect(x: 0, y: 0, width: 299, height: 299)
         print("[MLKit] ✅ Canvas setup completed")
     }
     
@@ -203,13 +206,13 @@ struct MLKit: View {
         print("[MLKit] 🤖 Starting analysis...")
         print("[MLKit] 📏 Drawing bounds: \(canvasView.drawing.bounds)")
         
-        guard !canvasView.drawing.bounds.isEmpty else {
-            print("[MLKit] ⚠️ Warning: Drawing is empty!")
-            predictionResult = "Please draw something first!"
-            confidence = 0.0
-            showResult = true
-            return
-        }
+//        guard !canvasView.drawing.bounds.isEmpty else {
+//            print("[MLKit] ⚠️ Warning: Drawing is empty!")
+//            predictionResult = "Please draw something first!"
+//            confidence = 0.0
+//            showResult = true
+//            return
+//        }
         
         print("[MLKit] ✅ Drawing detected, proceeding with analysis")
         isAnalyzing = true
@@ -234,75 +237,108 @@ struct MLKit: View {
         print("[MLKit] 🎨 Resizing image from \(image.size) to \(targetSize)")
         let renderer = UIGraphicsImageRenderer(size: targetSize)
         let resizedImage = renderer.image { _ in
-            image.draw(in: CGRect(origin: .zero, size: targetSize))
+            image.draw(in: CGRect(origin: .zero, size: CGSize(width: 299, height: 299)))
         }
         print("[MLKit] ✅ Image resize completed")
         return resizedImage
     }
     
+//    private func performMLPrediction(on image: UIImage) {
+//        print("[MLKit] 🏗️ Loading CoreML model...")
+//        
+//        // Load model directly without Vision wrapper first
+//        guard let mlModel = try? ImageDetectorDoodle(configuration: MLModelConfiguration()) else {
+//            print("[MLKit] ❌ Error: Failed to load ImageDetectorDoodle model")
+//            DispatchQueue.main.async {
+//                self.predictionResult = "Model loading failed"
+//                self.confidence = 0.0
+//                self.showResult = true
+//                self.isAnalyzing = false
+//            }
+//            return
+//        }
+//        
+//        print("[MLKit] ✅ CoreML model loaded successfully")
+//        
+//        // Convert UIImage to CVPixelBuffer
+//        print("[MLKit] 🔄 Converting UIImage to CVPixelBuffer...")
+//        guard let pixelBuffer = convertToPixelBuffer(image: image) else {
+//            print("[MLKit] ❌ Error: Failed to convert UIImage to CVPixelBuffer")
+//            DispatchQueue.main.async {
+//                self.predictionResult = "Image conversion to CVPixelBuffer failed"
+//                self.confidence = 0.0
+//                self.showResult = true
+//                self.isAnalyzing = false
+//            }
+//            return
+//        }
+//        
+//        print("[MLKit] ✅ CVPixelBuffer created successfully")
+//        
+//        // Export CVPixelBuffer as image for debugging
+//        if let debugImage = convertPixelBufferToUIImage(pixelBuffer: pixelBuffer) {
+//            DispatchQueue.main.async {
+//                self.exportImageForDebugging(debugImage, objectName: self.currentObject, suffix: "_cvpixelbuffer")
+//            }
+//        }
+//        
+//        print("[MLKit] 🎯 Performing direct CoreML prediction...")
+//        
+//        do {
+//            // Perform prediction directly with CoreML model
+//            let prediction = try mlModel.prediction(image: pixelBuffer)
+//            print("[MLKit] ✅ ML prediction completed successfully")
+//            
+//            // Process the prediction result
+//            DispatchQueue.main.async {
+//                self.processDirectMLResults(prediction: prediction)
+//            }
+//            
+//        } catch {
+//            print("[MLKit] ❌ Error during direct CoreML prediction: \(error.localizedDescription)")
+//            
+//            // Fallback to Vision framework approach
+//            print("[MLKit] 🔄 Trying fallback with Vision framework...")
+//            self.performVisionBasedPrediction(on: image)
+//        }
+//    }
+    
+
+    /// Compiles a .mlmodel in the app bundle and returns the compiled modelimport CoreML
+//    import Vision
+//    import UIKit
+
     private func performMLPrediction(on image: UIImage) {
-        print("[MLKit] 🏗️ Loading CoreML model...")
-        
-        // Load model directly without Vision wrapper first
-        guard let mlModel = try? ImageDetectorDoodle(configuration: MLModelConfiguration()) else {
-            print("[MLKit] ❌ Error: Failed to load ImageDetectorDoodle model")
-            DispatchQueue.main.async {
-                self.predictionResult = "Model loading failed"
-                self.confidence = 0.0
-                self.showResult = true
-                self.isAnalyzing = false
-            }
-            return
-        }
-        
-        print("[MLKit] ✅ CoreML model loaded successfully")
-        
-        // Convert UIImage to CVPixelBuffer
-        print("[MLKit] 🔄 Converting UIImage to CVPixelBuffer...")
-        guard let pixelBuffer = convertToPixelBuffer(image: image) else {
-            print("[MLKit] ❌ Error: Failed to convert UIImage to CVPixelBuffer")
-            DispatchQueue.main.async {
-                self.predictionResult = "Image conversion to CVPixelBuffer failed"
-                self.confidence = 0.0
-                self.showResult = true
-                self.isAnalyzing = false
-            }
-            return
-        }
-        
-        print("[MLKit] ✅ CVPixelBuffer created successfully")
-        
-        // Export CVPixelBuffer as image for debugging
-        if let debugImage = convertPixelBufferToUIImage(pixelBuffer: pixelBuffer) {
-            DispatchQueue.main.async {
-                self.exportImageForDebugging(debugImage, objectName: self.currentObject, suffix: "_cvpixelbuffer")
-            }
-        }
-        
-        print("[MLKit] 🎯 Performing direct CoreML prediction...")
-        
+        print("[MLKit] 🏗️ Loading and compiling CoreML model...")
+
+
         do {
-            // Perform prediction directly with CoreML model
-            let prediction = try mlModel.prediction(image: pixelBuffer)
-            print("[MLKit] ✅ ML prediction completed successfully")
-            
-            // Process the prediction result
-            DispatchQueue.main.async {
-                self.processDirectMLResults(prediction: prediction)
+            guard let mlModel = try? ImageDetectorDoodle(configuration: MLModelConfiguration()) else {
+                return
             }
             
-        } catch {
-            print("[MLKit] ❌ Error during direct CoreML prediction: \(error.localizedDescription)")
+            print("[MLKit] ✅ Model compiled and loaded")
             
-            // Fallback to Vision framework approach
-            print("[MLKit] 🔄 Trying fallback with Vision framework...")
-            self.performVisionBasedPrediction(on: image)
+            guard
+                let pixelBuffer = convertToPixelBuffer(
+                    image: image)
+            else {
+                print("Error on converting UIImage to CVPixelBuffer")
+            }
+
+        } catch {
+            print("[MLKit] ❌ Compilation or model error: \(error.localizedDescription)")
+            self.predictionResult = "Model load error"
+            self.confidence = 0.0
+            self.isAnalyzing = false
         }
     }
+
+
     
     private func convertToPixelBuffer(image: UIImage) -> CVPixelBuffer? {
         // Use original image size (no resize)
-        let originalSize = image.size
+        let originalSize = CGSize(width: 299, height: 299)
         print("[MLKit] 🎨 Creating CVPixelBuffer with original size: \(originalSize)")
         
         let attrs = [
@@ -313,9 +349,9 @@ struct MLKit: View {
         var pixelBuffer: CVPixelBuffer?
         let status = CVPixelBufferCreate(
             kCFAllocatorDefault,
-            Int(originalSize.width),
-            Int(originalSize.height),
-            kCVPixelFormatType_32ARGB,
+            299,
+            299,
+            kCVPixelFormatType_32BGRA,
             attrs,
             &pixelBuffer
         )
@@ -333,8 +369,8 @@ struct MLKit: View {
         
         guard let context = CGContext(
             data: pixelData,
-            width: Int(originalSize.width),
-            height: Int(originalSize.height),
+            width: 299,
+            height: 299,
             bitsPerComponent: 8,
             bytesPerRow: CVPixelBufferGetBytesPerRow(buffer),
             space: rgbColorSpace,
@@ -358,90 +394,90 @@ struct MLKit: View {
         print("[MLKit] ✅ CVPixelBuffer conversion completed")
         return buffer
     }
-    
-    private func processDirectMLResults(prediction: ImageDetectorDoodleOutput) {
-        print("[MLKit] 📊 Processing direct CoreML results...")
-        self.isAnalyzing = false
-        
-        // Get target probability dictionary
-        let targetProbability = prediction.targetProbability
-        print("[MLKit] 📊 Raw targetProbability: \(targetProbability)")
-        
-        // Find the highest prediction
-        let sortedPredictions = targetProbability.sorted { $0.value > $1.value }
-        
-        // Log all predictions for debugging
-        print("[MLKit] 📋 All predictions (sorted by confidence):")
-        for (index, (className, probability)) in sortedPredictions.enumerated() {
-            print("[MLKit] Result \(index + 1): \(className) - \(String(format: "%.2f", probability * 100))%")
-        }
-        
-        // Get top prediction
-        guard let topPrediction = sortedPredictions.first else {
-            print("[MLKit] ❌ Error: No predictions found")
-            self.predictionResult = "No predictions available"
-            self.confidence = 0.0
-            self.showResult = true
-            return
-        }
-        
-        let topClassName = topPrediction.key
-        let topConfidence = topPrediction.value
-        
-        print("[MLKit] 🏆 Top prediction: \(topClassName)")
-        print("[MLKit] 📈 Top confidence: \(String(format: "%.2f", topConfidence * 100))%")
-        print("[MLKit] 🎯 Target object: \(currentObject)")
-        
-        // Get confidence for the current target object
-        let normalizedCurrentObject = currentObject.lowercased().replacingOccurrences(of: " ", with: "_")
-        var targetConfidence: Double = 0.0
-        var foundTarget = false
-        
-        // Check different possible formats of the target object
-        let possibleKeys = [
-            currentObject,                                          // exact match
-            currentObject.lowercased(),                            // lowercase
-            normalizedCurrentObject,                               // with underscore
-            currentObject.replacingOccurrences(of: " ", with: "_") // original with underscore
-        ]
-        
-        for key in possibleKeys {
-            if let confidence = targetProbability[key] {
-                targetConfidence = confidence
-                foundTarget = true
-                print("[MLKit] ✅ Found target '\(currentObject)' as key '\(key)' with confidence: \(String(format: "%.2f", targetConfidence * 100))%")
-                break
-            }
-        }
-        
-        if !foundTarget {
-            print("[MLKit] ⚠️ Warning: Target object '\(currentObject)' not found in predictions")
-            print("[MLKit] 🔍 Available keys: \(Array(targetProbability.keys))")
-        }
-        
-        // Check if prediction matches target (either top prediction is correct OR target has high confidence)
-        let isTopPredictionCorrect = topClassName.lowercased().contains(currentObject.lowercased()) || 
-                                   currentObject.lowercased().contains(topClassName.lowercased())
-        
-        let isTargetConfident = targetConfidence > 0.5 // 50% threshold
-        let isCorrect = isTopPredictionCorrect || (foundTarget && isTargetConfident)
-        
-        print("[MLKit] 🎯 Target object confidence: \(String(format: "%.2f", targetConfidence * 100))%")
-        print("[MLKit] ✅ Is prediction correct? \(isCorrect ? "YES" : "NO")")
-        
-        if isTopPredictionCorrect {
-            print("[MLKit] 🎉 Top prediction matches target!")
-        } else if foundTarget && isTargetConfident {
-            print("[MLKit] 🎉 Target object has high confidence!")
-        }
-        
-        // Set results for UI display
-        self.predictionResult = topClassName
-        self.confidence = Float(max(topConfidence, targetConfidence)) // Use higher confidence
-        self.showResult = true
-        
-        print("[MLKit] 🎉 Results displayed to user!")
-    }
+//    
+//    private func processDirectMLResults(prediction: ImageDetectorDoodleOutput) {
+//        print("[MLKit] 📊 Processing direct CoreML results...")
+//        self.isAnalyzing = false
+//        
+//        // Get target probability dictionary
+//        let targetProbability = prediction.targetProbability
+//        print("[MLKit] 📊 Raw targetProbability: \(targetProbability)")
+//        
+//        // Find the highest prediction
+//        let sortedPredictions = targetProbability.sorted { $0.value > $1.value }
+//        
+//        // Log all predictions for debugging
+//        print("[MLKit] 📋 All predictions (sorted by confidence):")
+//        for (index, (className, probability)) in sortedPredictions.enumerated() {
+//            print("[MLKit] Result \(index + 1): \(className) - \(String(format: "%.2f", probability * 100))%")
+//        }
+//        
+//        // Get top prediction
+//        guard let topPrediction = sortedPredictions.first else {
+//            print("[MLKit] ❌ Error: No predictions found")
+//            self.predictionResult = "No predictions available"
+//            self.confidence = 0.0
+//            self.showResult = true
+//            return
+//        }
+//        
+//        let topClassName = topPrediction.key
+//        let topConfidence = topPrediction.value
+//        
+//        print("[MLKit] 🏆 Top prediction: \(topClassName)")
+//        print("[MLKit] 📈 Top confidence: \(String(format: "%.2f", topConfidence * 100))%")
+//        print("[MLKit] 🎯 Target object: \(currentObject)")
+//        
+//        // Get confidence for the current target object
+//        let normalizedCurrentObject = currentObject.lowercased().replacingOccurrences(of: " ", with: "_")
+//        var targetConfidence: Double = 0.0
+//        var foundTarget = false
+//        
+//        // Check different possible formats of the target object
+//        let possibleKeys = [
+//            currentObject,                                          // exact match
+//            currentObject.lowercased(),                            // lowercase
+//            normalizedCurrentObject,                               // with underscore
+//            currentObject.replacingOccurrences(of: " ", with: "_") // original with underscore
+//        ]
+//        
+//        for key in possibleKeys {
+//            if let confidence = targetProbability[key] {
+//                targetConfidence = confidence
+//                foundTarget = true
+//                print("[MLKit] ✅ Found target '\(currentObject)' as key '\(key)' with confidence: \(String(format: "%.2f", targetConfidence * 100))%")
+//                break
+//            }
+//        }
+//        
+//        if !foundTarget {
+//            print("[MLKit] ⚠️ Warning: Target object '\(currentObject)' not found in predictions")
+//            print("[MLKit] 🔍 Available keys: \(Array(targetProbability.keys))")
+//        }
+//        
+//        // Check if prediction matches target (either top prediction is correct OR target has high confidence)
+//        let isTopPredictionCorrect = topClassName.lowercased().contains(currentObject.lowercased()) || 
+//                                   currentObject.lowercased().contains(topClassName.lowercased())
+//        
+//        let isTargetConfident = targetConfidence > 0.5 // 50% threshold
+//        let isCorrect = isTopPredictionCorrect || (foundTarget && isTargetConfident)
+//        
+//        print("[MLKit] 🎯 Target object confidence: \(String(format: "%.2f", targetConfidence * 100))%")
+//        print("[MLKit] ✅ Is prediction correct? \(isCorrect ? "YES" : "NO")")
+//        
+//        if isTopPredictionCorrect {
+//            print("[MLKit] 🎉 Top prediction matches target!")
+//        } else if foundTarget && isTargetConfident {
+//            print("[MLKit] 🎉 Target object has high confidence!")
+//        }
+//        
+//        // Set results for UI display
+//        self.predictionResult = topClassName
+//        self.confidence = Float(max(topConfidence, targetConfidence)) // Use higher confidence
+//        self.showResult = true
+//        
+//        print("[MLKit] 🎉 Results displayed to user!")
+//    }
     
     // MARK: - Image Processing Functions
     
@@ -481,7 +517,7 @@ struct MLKit: View {
         print("[MLKit] 💾 Exporting debug image...")
         
         // Use specific path as requested
-        let specificPath = "/Users/daf2a/Documents/task/challenge4exploration/challenge4exploration/MLKit/aset"
+        let specificPath = "/Users/kerupuksambel/Projects/Academy/challenge4exploration/challenge4exploration/MLKit/aset"
         let mlkitFolder = URL(fileURLWithPath: specificPath)
         
         do {
@@ -552,56 +588,56 @@ struct MLKit: View {
         return uiImage
     }
     
-    private func performVisionBasedPrediction(on image: UIImage) {
-        print("[MLKit] 🔄 Fallback: Using Vision framework...")
-        
-        guard let model = try? VNCoreMLModel(for: ImageDetectorDoodle().model) else {
-            print("[MLKit] ❌ Error: Failed to load model for Vision framework")
-            DispatchQueue.main.async {
-                self.predictionResult = "Vision model loading failed"
-                self.confidence = 0.0
-                self.showResult = true
-                self.isAnalyzing = false
-            }
-            return
-        }
-        
-        let request = VNCoreMLRequest(model: model) { request, error in
-            print("[MLKit] 📡 Received Vision framework response")
-            DispatchQueue.main.async {
-                self.processMLResults(request: request, error: error)
-            }
-        }
-        
-        // Set image crop and scale option for better compatibility
-        request.imageCropAndScaleOption = .centerCrop
-        
-        guard let cgImage = image.cgImage else {
-            print("[MLKit] ❌ Error: Failed to convert UIImage to CGImage for Vision")
-            DispatchQueue.main.async {
-                self.predictionResult = "Vision image conversion failed"
-                self.confidence = 0.0
-                self.showResult = true
-                self.isAnalyzing = false
-            }
-            return
-        }
-        
-        let handler = VNImageRequestHandler(cgImage: cgImage, options: [:])
-        
-        do {
-            try handler.perform([request])
-            print("[MLKit] ✅ Vision framework request sent successfully")
-        } catch {
-            print("[MLKit] ❌ Vision framework error: \(error.localizedDescription)")
-            DispatchQueue.main.async {
-                self.predictionResult = "Vision prediction failed: \(error.localizedDescription)"
-                self.confidence = 0.0
-                self.showResult = true
-                self.isAnalyzing = false
-            }
-        }
-    }
+//    private func performVisionBasedPrediction(on image: UIImage) {
+//        print("[MLKit] 🔄 Fallback: Using Vision framework...")
+//        
+//        guard let model = try? VNCoreMLModel(for: ImageDetectorDoodle().model) else {
+//            print("[MLKit] ❌ Error: Failed to load model for Vision framework")
+//            DispatchQueue.main.async {
+//                self.predictionResult = "Vision model loading failed"
+//                self.confidence = 0.0
+//                self.showResult = true
+//                self.isAnalyzing = false
+//            }
+//            return
+//        }
+//        
+//        let request = VNCoreMLRequest(model: model) { request, error in
+//            print("[MLKit] 📡 Received Vision framework response")
+//            DispatchQueue.main.async {
+//                self.processMLResults(request: request, error: error)
+//            }
+//        }
+//        
+//        // Set image crop and scale option for better compatibility
+//        request.imageCropAndScaleOption = .centerCrop
+//        
+//        guard let cgImage = image.cgImage else {
+//            print("[MLKit] ❌ Error: Failed to convert UIImage to CGImage for Vision")
+//            DispatchQueue.main.async {
+//                self.predictionResult = "Vision image conversion failed"
+//                self.confidence = 0.0
+//                self.showResult = true
+//                self.isAnalyzing = false
+//            }
+//            return
+//        }
+//        
+//        let handler = VNImageRequestHandler(cgImage: cgImage, options: [:])
+//        
+//        do {
+//            try handler.perform([request])
+//            print("[MLKit] ✅ Vision framework request sent successfully")
+//        } catch {
+//            print("[MLKit] ❌ Vision framework error: \(error.localizedDescription)")
+//            DispatchQueue.main.async {
+//                self.predictionResult = "Vision prediction failed: \(error.localizedDescription)"
+//                self.confidence = 0.0
+//                self.showResult = true
+//                self.isAnalyzing = false
+//            }
+//        }
+//    }
     
     private func processMLResults(request: VNRequest, error: Error?) {
         print("[MLKit] 📊 Processing ML results...")
