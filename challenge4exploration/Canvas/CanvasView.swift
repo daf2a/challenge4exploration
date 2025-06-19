@@ -6,7 +6,7 @@
 //
 //    func makeUIView(context: Context) -> PKCanvasView {
 //        canvasView.drawingPolicy = .anyInput
-//        canvasView.tool = PKInkingTool(.pen, color: .black, width: 5)
+//        canvasView.tool = PKInkingTool(.pen, color: .gray, width: 5)
 //        return canvasView
 //    }
 //

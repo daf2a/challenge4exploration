@@ -18,8 +18,8 @@ struct ContentView: View {
         Tab("GameKit", systemImage: "gamecontroller"){
             GameKit()
         }
-        Tab("GamePlayKit", systemImage: "dice"){
-            GamePlayKit()
+        Tab("Card Memory", systemImage: "dice"){
+            CardMemoryView()
         }
         Tab("SpriteKit", systemImage: "figure.run"){
             SpriteKitView()
