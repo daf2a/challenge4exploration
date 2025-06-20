@@ -35,31 +35,34 @@ struct CardMemoryView: View {
     ]
     
     var resultView: some View {
-        ZStack {
-            VStack(spacing: 0) {
+        VStack (spacing: 0){
+            ZStack{
                 Color.red.opacity(0.8)
                     .ignoresSafeArea()
                     .frame(height: UIScreen.main.bounds.height / 2)
-                Color.mint.opacity(0.8)
-                    .ignoresSafeArea()
+                Circle()
+                    .fill(Color.black.opacity(0.3))
+                    .frame(width: 150, height: 150)
+                    .offset(y: 120)
+                Image(resultMedal(score1: player2.score, score2: player1.score))
+                    .resizable()
+                    .frame(width: 150, height: 150)
+                    .rotationEffect(.degrees(180))
+                    .offset(y: 120)
             }
             
-            VStack(spacing: 40) {
-                Image(winnerImageName())
+            ZStack{
+                Color.mint.opacity(0.8)
+                    .ignoresSafeArea()
+                    .frame(height: UIScreen.main.bounds.height / 2)
+                Circle()
+                    .fill(Color.black.opacity(0.3))
+                    .frame(width: 150, height: 150)
+                    .offset(y: -120)
+                Image(resultMedal(score1: player1.score, score2: player2.score))
                     .resizable()
-                    .frame(width: 120, height: 120)
-                
-                Image(loserImageName())
-                    .resizable()
-                    .frame(width: 100, height: 100)
-                
-                Button("Rematch") {
-                    startGame()
-                }
-                .padding()
-                .background(Color.white)
-                .foregroundColor(.black)
-                .clipShape(Capsule())
+                    .frame(width: 150, height: 150)
+                    .offset(y: -120)
             }
         }
     }
@@ -324,14 +327,13 @@ struct CardMemoryView: View {
         }
     }
     
-    func winnerImageName() -> String {
-        return player1.score > player2.score ? "medal_gold" : "medal_silver"
+    func resultMedal(score1: Int, score2: Int) -> String {
+        if score1 > score2 {
+            return "medal_gold"
+        } else {
+            return "medal_silver"
+        }
     }
-    
-    func loserImageName() -> String {
-        return player1.score > player2.score ? "medal_silver" : "medal_gold"
-    }
-    
     
     func resultText() -> String {
         if player1.score > player2.score {
@@ -391,10 +393,11 @@ struct CardMemoryView_PreviewWrapper: View {
     }
 }
 
-//#Preview("Result View Preview") {
-//    // Buat instance dummy untuk preview
-//    CardMemoryView_PreviewWrapper()
-//}
+
+#Preview("Result View Preview") {
+    // Buat instance dummy untuk preview
+    CardMemoryView_PreviewWrapper()
+}
 
 #Preview {
     CardMemoryView()
