@@ -120,105 +120,6 @@ struct CardMemoryView: View {
             }
             .padding()
         }
-        
-        
-        //                ZStack {
-        //                    //            (player1.score > player2.score ? Color.mint.opacity(0.5) : Color.red.opacity(0.5))
-        //                    //                .ignoresSafeArea()
-        //                    RoundedRectangle(cornerRadius: 20)
-        //                        .fill(Color.purple.opacity(0.7))
-        //                        .frame(height: 350)
-        //                        .padding(7)
-        //                    VStack(spacing: 0) {
-        //                        // Header row
-        //                        HStack {
-        //                            Text("Rank")
-        //                                .font(.title2.bold())
-        //                                .foregroundColor(.white)
-        //                                .frame(width: 60, alignment: .leading)
-        //
-        //                            Text("Name")
-        //                                .font(.title2.bold())
-        //                                .foregroundColor(.white)
-        //                                .frame(maxWidth: .infinity, alignment: .leading)
-        //                                .padding(.leading, 20)
-        //
-        //                            Text("Score")
-        //                                .font(.title2.bold())
-        //                                .foregroundColor(.white)
-        //                                .frame(width: 100)
-        //                        }
-        //                        .padding(.horizontal, 20)
-        //                        .padding(.bottom, 25)
-        //                        //                .background(Color.purple.opacity(0.6))
-        //                        //                .cornerRadius(15)
-        //
-        //                        // Leaderboard rows
-        //                        ForEach(Array(sortedPlayers.enumerated()), id: \.offset) {
-        //                            index,
-        //                            player in
-        //                            HStack {
-        //                                if index == 0 {
-        //                                    Image("medal_gold")
-        //                                        .resizable()
-        //                                        .frame(width: 82, height: 82)
-        //                                } else {
-        //                                    Image("medal_silver")
-        //                                        .resizable()
-        //                                        .frame(width: 82, height: 82)
-        //                                }
-        //
-        //                                Text(player.name)
-        //                                    .font(.title3.bold())
-        //                                    .frame(maxWidth: .infinity, alignment: .leading)
-        //                                    .foregroundColor(.white)
-        //                                    .padding(.leading, 20)
-        //
-        //                                Text("\(player.score)")
-        //                                    .font(.title3.bold())
-        //                                    .frame(width: 100)
-        //                                    .foregroundColor(.white)
-        //                            }
-        //                            .padding(.trailing, 20)
-        //                            .background(
-        //                                index % 2 == 0
-        //                                    ? Color.cyan.opacity(0.5) : Color.pink.opacity(0.5)
-        //                            )
-        //                            .cornerRadius(15)
-        //                        }
-        //                        .padding(.top, 7)
-        //                    }
-        //                    .padding(.horizontal)
-        //                }
-        
-        //            ZStack{
-        //                Color.red.opacity(0.8)
-        //                    .ignoresSafeArea()
-        //                    .frame(height: UIScreen.main.bounds.height / 2)
-        //                Circle()
-        //                    .fill(Color.black.opacity(0.3))
-        //                    .frame(width: 150, height: 150)
-        //                    .offset(y: 120)
-        //                Image(resultMedal(score1: player2.score, score2: player1.score))
-        //                    .resizable()
-        //                    .frame(width: 250, height: 250)
-        //                    .rotationEffect(.degrees(180))
-        //                    .offset(y: 100)
-        //            }
-        //
-        //            ZStack{
-        //                Color.mint.opacity(0.8)
-        //                    .ignoresSafeArea()
-        //                    .frame(height: UIScreen.main.bounds.height / 2)
-        //                Circle()
-        //                    .fill(Color.black.opacity(0.3))
-        //                    .frame(width: 150, height: 150)
-        //                    .offset(y: -120)
-        //                Image(resultMedal(score1: player1.score, score2: player2.score))
-        //                    .resizable()
-        //                    .frame(width: 250, height: 250)
-        //                    .offset(y: -100)
-        //            }
     }
     
     var body: some View {
@@ -308,7 +209,7 @@ struct CardMemoryView: View {
                     ZStack {
                         // Warna kotak player 1
                         RoundedRectangle(cornerRadius: 20)
-//                            .stroke(.mint.opacity(0.7), lineWidth: 12)
+                        //                            .stroke(.mint.opacity(0.7), lineWidth: 12)
                             .fill(Color.mint)
                             .frame(width: 100, height: 100)
                         VStack {
@@ -328,7 +229,7 @@ struct CardMemoryView: View {
                     ZStack {
                         // Warna kotak player 2
                         RoundedRectangle(cornerRadius: 20)
-//                            .stroke(.black.opacity(0.7), lineWidth: 12)
+                        //                            .stroke(.black.opacity(0.7), lineWidth: 12)
                             .fill(Color.red)
                             .frame(width: 100, height: 100)
                         VStack {
@@ -624,7 +525,7 @@ struct CardView: View {
                 Image(card.imageName)
                     .resizable()
                     .frame(width: 70, height: 70)
-//                    .scaledToFit()
+                //                    .scaledToFit()
                     .padding(10)
                     .foregroundColor(.white)
             )
